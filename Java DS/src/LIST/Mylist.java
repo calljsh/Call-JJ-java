@@ -1,11 +1,9 @@
 package LIST;
-
 import java.util.Arrays;
-
 public class Mylist implements list
 {
     int [] myarray;
-    public  static  final int number= 3;
+    public  static  final int number= 5;
   int  usedsize=0;
     public Mylist()
     {
@@ -29,11 +27,23 @@ public boolean isfull()
     else
         return  false;
 }
+    @Override
+    public boolean isEmpty()
+    {
+        return this.usedsize==0?true:false;
+    }
+
     private  void checkPos (int pos)   throws POSIllegal
     {
         if(pos<0||pos>this.usedsize)
         {
-            System.out.println("不合法!");
+            throw  new POSIllegal("pos不合法,你的pos是 :"+pos);
+        }
+    }
+    private  void checkPosSet (int pos)   throws POSIllegal
+    {
+        if(pos<0||pos>=this.usedsize)
+        {
             throw  new POSIllegal("pos不合法,你的pos是 :"+pos);
         }
     }
@@ -47,7 +57,6 @@ public void display()
             System.out.print(" ");
         }
         System.out.println();
-
 }
     @Override
     public void add(int data)
@@ -57,56 +66,121 @@ public void display()
             this.usedsize++;
     }
     @Override
-    public void add(int pos, int data) {
+    public void add(int pos, int data)
+    {
         checkcap();
         try {
             checkPos(pos);
-        } catch (POSIllegal e) {
+        }
+        catch (POSIllegal e)
+        {
             e.printStackTrace();
+            System.out.println("下标不符合规定");
+            return ;
         }
-        for (int i = usedsize - 1; i >= pos; i--) {
-            this.myarray[i + 1] = this.myarray[i];
+        for(int i=this.usedsize-1;i>=pos;i--)
+        {
+             this.myarray[i+1]=this.myarray[i];
         }
-        this.myarray[pos] = data;
-        usedsize++;
+        this.myarray[pos]=data;
+        this.usedsize++;
+
     }
     @Override
-    public boolean contains(int toFind) {
-        return false;
+    public boolean contains(int toFind)
+    {
+        if(isEmpty())
+        {
+            System.out.println("找不到,因为顺序表是空的");
+            return false;
+        }
+        for(int i=0;i<usedsize;i++)
+        {
+            if(this.myarray[i]==toFind)
+            {
+                System.out.println("找到了,它的下标是 :"+i);
+                return true;
+            }
+        }
+        System.out.println("顺序表里没有这么元素");
+        return  false;
     }
 
     @Override
-    public int indexOf(int toFind) {
-        return 0;
+    public int indexOf(int toFind)
+    {
+        if(isEmpty())
+        {
+            return -1;
+        }
+        else
+        {
+            for(int i=0;i<this.usedsize;i++)
+            {
+                if(this.myarray[i]==toFind)
+                    return i;
+            }
+        }
+            return -1;
     }
 
     @Override
-    public int get(int pos) {
+    public int get(int pos)
+    {
         try {
             return this.myarray[pos];
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e)
+        {
+            e.printStackTrace();
             System.out.println("越界了,数组只有"+myarray.length+"这么大");
-            return 0; // 或者其他你想返回的默认值
+            System.out.println("请你看看自己是不是选择了负数或者大于数组大小的数");
+           return  pos;
         }
     }
     @Override
-    public void set(int pos, int value) {
+    public void set(int pos, int value)
+    {
+        try {
+           checkPosSet(pos);
+        }
+        catch (POSIllegal e)
+        {
+            e.printStackTrace();
+            return ;
+        }
+        this.myarray[pos]=value;
 
     }
-
     @Override
-    public void remove(int toRemove) {
-
+    public void remove(int toRemove)
+    {
+         int idx=indexOf(toRemove);
+         if(idx==-1)
+         {
+             System.out.println("没有这个数字哦");
+         }
+         else
+         {
+             for(int i=idx;i<usedsize-1;i++)
+             {
+                 this.myarray[i]=this.myarray[i+1];
+             }
+             usedsize--;
+         }
     }
-
     @Override
-    public int size() {
-        return 0;
+    public int size()
+    {
+        return this.usedsize;
     }
-
     @Override
     public void clear()
     {
+        if(isEmpty())
+        {
+            System.out.println("没法清理,顺序表是空的");
+            return ;
+        }
         for(int i=0;i<this.usedsize;i++)
         {
             this.myarray[i]=0;

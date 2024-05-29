@@ -23,5 +23,8 @@ public interface list
     // 打印顺序表，注意：该方法并不是顺序表中的方法，为了方便看测试结果给出的
     public void display();
     public boolean isfull();
+    // 负责检查顺序表是否满了
+    public boolean isEmpty();
+    //负责检查顺序表是否是空的
 }
 
